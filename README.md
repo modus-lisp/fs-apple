@@ -12,6 +12,7 @@ is assumed to fit a fixnum).
 | Format | File | Functions |
 |---|---|---|
 | Apple Partition Map (driver descriptor + map) | `lib/apm.lisp` | `apm-read`, `apm-write-ddm`, `apm-write-map`, `apm-boot-checksum` |
+| PackBits (TN1023) | `lib/packbits.lisp` | `packbits`, `unpackbits` |
 
 Planned, each its own file: HFS volumes, resource forks, MacBinary, AppleDouble,
 BinHex.

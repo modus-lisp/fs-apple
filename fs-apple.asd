@@ -2,8 +2,9 @@
 ;;;;
 ;;;;   (asdf:load-system "fs-apple")
 ;;;;
-;;;; One package, FS-APPLE.  So far: lib/apm.lisp, the Apple Partition Map (a
-;;;; disk's driver descriptor and partition map).  To come, each its own file:
+;;;; One package, FS-APPLE (lib/package.lisp).  So far: lib/apm.lisp, the Apple
+;;;; Partition Map (a disk's driver descriptor and partition map); lib/packbits.lisp,
+;;;; PackBits.  To come, each its own file:
 ;;;; HFS volumes, resource forks, MacBinary, AppleDouble, BinHex.  The tests
 ;;;; under test/ are plain CL scripts (see each one's header).
 
@@ -12,4 +13,6 @@
   :author "ynniv"
   :version "0.1.0"
   :serial t
-  :components ((:file "lib/apm")))
+  :components ((:file "lib/package")
+               (:file "lib/apm")
+               (:file "lib/packbits")))

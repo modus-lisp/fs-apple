@@ -4,6 +4,7 @@
 ;;;; Portable CL: run it with sbcl --script, or under Modus.  The last line is
 ;;;; "APM-TEST PASS" or "APM-TEST FAIL".
 
+(load (merge-pathnames "../lib/package.lisp" *load-truename*))
 (load (merge-pathnames "../lib/apm.lisp" *load-truename*))
 
 (defvar *checks* 0)

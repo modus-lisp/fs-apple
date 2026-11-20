@@ -27,10 +27,6 @@
 ;;;;
 ;;;; Style follows fs-fat: plain loops and AREF, any vector of byte values.
 
-(defpackage #:fs-apple
-  (:use #:cl)
-  (:export #:apm-boot-checksum #:apm-write-ddm #:apm-write-map #:apm-read
-           #:u16-ref #:u32-ref #:set-u16 #:set-u32 #:set-ascii #:ascii-ref))
 (in-package #:fs-apple)
 
 ;;; ---- big-endian fields --------------------------------------------------------
