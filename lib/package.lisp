@@ -11,4 +11,8 @@
            ;; resource forks (lib/resource-fork.lisp)
            #:resource-fork-write #:resource-fork-read
            ;; MacBinary II (lib/macbinary.lisp; its CRC is cram's)
-           #:macbinary-write #:macbinary-read))
+           #:macbinary-write #:macbinary-read
+           ;; AppleDouble (lib/appledouble.lisp)
+           #:appledouble-read #:appledouble-write
+           ;; Disk Copy images (lib/diskcopy.lisp; NDIF's ADC is cram's)
+           #:diskcopy42-read #:ndif-read))

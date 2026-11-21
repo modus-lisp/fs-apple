@@ -15,8 +15,10 @@ is assumed to fit a fixnum).
 | PackBits (TN1023) | `lib/packbits.lisp` | `packbits`, `unpackbits` |
 | A file's resource fork (Inside Macintosh: Resource Manager) | `lib/resource-fork.lisp` | `resource-fork-write`, `resource-fork-read` |
 | MacBinary II | `lib/macbinary.lisp` | `macbinary-write`, `macbinary-read` (the header's CRC-16 is cram's `crc16`) |
+| AppleDouble (RFC 1740) | `lib/appledouble.lisp` | `appledouble-read`, `appledouble-write` |
+| Disk Copy 4.2 and 6 (NDIF) images | `lib/diskcopy.lisp` | `diskcopy42-read`, `ndif-read` (NDIF's ADC is cram's `adc-decompress`) |
 
-Planned, each its own file: HFS volumes, AppleDouble, BinHex.
+Planned, each its own file: HFS volumes, BinHex.
 
 MacBinary needs [cram](https://github.com/modus-lisp/cram) (`fs-apple.asd` depends on it).
 

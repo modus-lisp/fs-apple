@@ -19,4 +19,6 @@
                (:file "lib/apm")
                (:file "lib/packbits")
                (:file "lib/resource-fork")
-               (:file "lib/macbinary")))
+               (:file "lib/macbinary")
+               (:file "lib/appledouble")
+               (:file "lib/diskcopy")))
