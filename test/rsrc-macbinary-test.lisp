@@ -12,7 +12,7 @@
                   (merge-pathnames "../../cram/" *load-truename*))))
     (load (merge-pathnames "src/packages.lisp" dir))
     (load (merge-pathnames "src/crc16.lisp" dir))))
-(dolist (f '("package" "apm" "packbits" "resource-fork" "macbinary"))
+(dolist (f '("package" "macroman" "apm" "packbits" "resource-fork" "macbinary"))
   (load (merge-pathnames (format nil "../lib/~A.lisp" f) *load-truename*)))
 
 (defvar *fails* 0)

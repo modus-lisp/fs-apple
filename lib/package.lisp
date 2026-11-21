@@ -15,4 +15,14 @@
            ;; AppleDouble (lib/appledouble.lisp)
            #:appledouble-read #:appledouble-write
            ;; Disk Copy images (lib/diskcopy.lisp; NDIF's ADC is cram's)
-           #:diskcopy42-read #:ndif-read))
+           #:diskcopy42-read #:ndif-read
+           ;; Mac Roman (lib/macroman.lisp)
+           #:mac-roman-decode #:mac-roman-encode
+           ;; HFS volumes (lib/hfs.lisp)
+           #:hfs-read #:hfs-write #:hfs-ref #:hfs-set #:hfs-remove #:hfs-paths
+           #:hfs-folder #:make-hfs-folder #:hfs-folder-p #:hfs-folder-name #:hfs-folder-entries
+           #:hfs-folder-flags #:hfs-folder-x #:hfs-folder-y
+           #:hfs-folder-crdate #:hfs-folder-mddate #:hfs-folder-bkdate
+           #:hfs-file #:make-hfs-file #:hfs-file-p #:hfs-file-type #:hfs-file-creator #:hfs-file-flags
+           #:hfs-file-x #:hfs-file-y #:hfs-file-crdate #:hfs-file-mddate #:hfs-file-bkdate
+           #:hfs-file-aliastarget #:hfs-file-data #:hfs-file-rsrc))

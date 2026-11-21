@@ -9,8 +9,9 @@
 ;;;; reference lists (per resource its ID, name offset -1 for none, attributes
 ;;;; and 24-bit data offset, 4 reserved bytes) and the name list.
 ;;;;
-;;;; A RESOURCE is a list (TYPE ID DATA &optional NAME): TYPE a 4-character
-;;;; string, ID a signed 16-bit integer, DATA octets, NAME a string or NIL.
+;;;; A RESOURCE is a list (TYPE ID DATA &optional NAME ATTRIBUTES): TYPE a
+;;;; 4-character string, ID a signed 16-bit integer, DATA octets, NAME a string
+;;;; (Mac Roman) or NIL, ATTRIBUTES the attribute byte (default 0).
 
 (in-package #:fs-apple)
 
@@ -21,14 +22,15 @@
     (error "fs-apple: a resource type is 4 characters, not ~S" type))
   type)
 
-(defun resource-fork-write (resources)
+(defun resource-fork-write (resources &key (map-header t))
   "The resource fork (octets) holding RESOURCES, in their order; types in the
-   order they first appear."
+   order they first appear.  MAP-HEADER NIL leaves the map's copy of the file
+   header zero (the Resource Manager does not read it; macresources writes it so)."
   (let* ((datas (mapcar (lambda (r) (coerce (third r) '(vector (unsigned-byte 8)))) resources))
          (data-len (reduce #'+ datas :key (lambda (d) (+ 4 (length d)))))
          (types (remove-duplicates (mapcar (lambda (r) (%rf-type-code (first r))) resources)
                                    :test #'string= :from-end t))
-         (names (loop for r in resources when (fourth r) collect (fourth r)))
+         (names (loop for r in resources when (fourth r) collect (mac-roman-encode (fourth r))))
          (names-len (reduce #'+ names :key (lambda (n) (1+ (length n)))))
          (tl-len (+ 2 (* 8 (length types))))
          (refs-len (* 12 (length resources)))
@@ -47,7 +49,7 @@
                            (replace out d :start1 (+ data-off at 4))
                            (incf at (+ 4 (length d))))))
         ;; the map: header copy, reserved, attributes 0, type list at 28, names after the refs
-        (header map-off)
+        (when map-header (header map-off))
         (set-u16 out (+ map-off 24) 28)
         (set-u16 out (+ map-off 26) (+ 28 tl-len refs-len))
         (let ((tl (+ map-off 28)) (ref-at tl-len) (name-at 0))
@@ -63,31 +65,34 @@
                            do (let ((ref (+ tl ref-at)))
                                 (set-u16 out ref (logand (second r) #xFFFF))
                                 (if (fourth r)
-                                    (let ((n (fourth r)) (na (+ tl tl-len refs-len name-at)))
+                                    (let ((n (mac-roman-encode (fourth r))) (na (+ tl tl-len refs-len name-at)))
                                       (set-u16 out (+ ref 2) name-at)
                                       (setf (aref out na) (length n))
-                                      (set-ascii out (1+ na) n (length n))
+                                      (replace out n :start1 (1+ na))
                                       (incf name-at (1+ (length n))))
                                     (set-u16 out (+ ref 2) #xFFFF))
-                                (set-u32 out (+ ref 4) (logand o #xFFFFFF))   ; attributes 0
+                                (set-u32 out (+ ref 4) (logior (ash (or (fifth r) 0) 24) (logand o #xFFFFFF)))
                                 (incf ref-at 12))))))))
     out))
 
 (defun resource-fork-read (fork)
-  "The resources in FORK, as RESOURCE-FORK-WRITE takes them, in type-list order."
+  "The resources in FORK, as RESOURCE-FORK-WRITE takes them (TYPE ID DATA NAME
+   ATTRIBUTES), in type-list order.  An empty fork has none."
+  (when (zerop (length fork)) (return-from resource-fork-read nil))
   (let* ((data-off (u32-ref fork 0)) (map-off (u32-ref fork 4))
          (tl (+ map-off (u16-ref fork (+ map-off 24))))
          (nl (+ map-off (u16-ref fork (+ map-off 26))))
          (ntypes (logand (1+ (u16-ref fork tl)) #xFFFF)))
     (loop for k below ntypes
           for e = (+ tl 2 (* 8 k))
-          for type = (ascii-ref fork e 4)
+          for type = (map 'string #'code-char (subseq fork e (+ e 4)))
           append (loop for j to (u16-ref fork (+ e 4))
                        for ref = (+ tl (u16-ref fork (+ e 6)) (* 12 j))
                        collect (let* ((id (let ((v (u16-ref fork ref))) (if (>= v #x8000) (- v #x10000) v)))
                                       (no (u16-ref fork (+ ref 2)))
                                       (at (+ data-off (logand (u32-ref fork (+ ref 4)) #xFFFFFF)))
                                       (data (subseq fork (+ at 4) (+ at 4 (u32-ref fork at)))))
-                                 (if (= no #xFFFF)
-                                     (list type id data)
-                                     (list type id data (ascii-ref fork (+ nl no 1) (aref fork (+ nl no))))))))))
+                                 (list type id data
+                                       (unless (= no #xFFFF)
+                                         (mac-roman-decode fork :start (+ nl no 1) :end (+ nl no 1 (aref fork (+ nl no)))))
+                                       (ldb (byte 8 24) (u32-ref fork (+ ref 4)))))))))

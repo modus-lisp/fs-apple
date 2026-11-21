@@ -16,9 +16,11 @@
   :depends-on ("cram")
   :serial t
   :components ((:file "lib/package")
+               (:file "lib/macroman")
                (:file "lib/apm")
                (:file "lib/packbits")
                (:file "lib/resource-fork")
                (:file "lib/macbinary")
                (:file "lib/appledouble")
-               (:file "lib/diskcopy")))
+               (:file "lib/diskcopy")
+               (:file "lib/hfs")))

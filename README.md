@@ -17,8 +17,12 @@ is assumed to fit a fixnum).
 | MacBinary II | `lib/macbinary.lisp` | `macbinary-write`, `macbinary-read` (the header's CRC-16 is cram's `crc16`) |
 | AppleDouble (RFC 1740) | `lib/appledouble.lisp` | `appledouble-read`, `appledouble-write` |
 | Disk Copy 4.2 and 6 (NDIF) images | `lib/diskcopy.lisp` | `diskcopy42-read`, `ndif-read` (NDIF's ADC is cram's `adc-decompress`) |
+| HFS volumes | `lib/hfs.lisp` | `hfs-read`, `hfs-write`; a volume is an `hfs-folder` (`hfs-ref`, `hfs-set`, `hfs-remove`, `hfs-paths`), a file an `hfs-file` |
+| Mac OS Roman | `lib/macroman.lisp` | `mac-roman-decode`, `mac-roman-encode` (HFS and resource names) |
 
-Planned, each its own file: HFS volumes, BinHex.
+`hfs-write` is machfs's writer, decision for decision, so the same tree makes the same
+volume: System 6's boot blocks from the System file, the startup application, aliases
+rebuilt for the volume.  Planned: BinHex.
 
 MacBinary needs [cram](https://github.com/modus-lisp/cram) (`fs-apple.asd` depends on it).
 
