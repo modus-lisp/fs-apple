@@ -13,9 +13,12 @@ is assumed to fit a fixnum).
 |---|---|---|
 | Apple Partition Map (driver descriptor + map) | `lib/apm.lisp` | `apm-read`, `apm-write-ddm`, `apm-write-map`, `apm-boot-checksum` |
 | PackBits (TN1023) | `lib/packbits.lisp` | `packbits`, `unpackbits` |
+| A file's resource fork (Inside Macintosh: Resource Manager) | `lib/resource-fork.lisp` | `resource-fork-write`, `resource-fork-read` |
+| MacBinary II | `lib/macbinary.lisp` | `macbinary-write`, `macbinary-read` (the header's CRC-16 is cram's `crc16`) |
 
-Planned, each its own file: HFS volumes, resource forks, MacBinary, AppleDouble,
-BinHex.
+Planned, each its own file: HFS volumes, AppleDouble, BinHex.
+
+MacBinary needs [cram](https://github.com/modus-lisp/cram) (`fs-apple.asd` depends on it).
 
 ```lisp
 (asdf:load-system "fs-apple")

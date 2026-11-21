@@ -7,4 +7,8 @@
            ;; the Apple Partition Map (lib/apm.lisp)
            #:apm-boot-checksum #:apm-write-ddm #:apm-write-map #:apm-read
            ;; PackBits (lib/packbits.lisp)
-           #:packbits #:unpackbits))
+           #:packbits #:unpackbits
+           ;; resource forks (lib/resource-fork.lisp)
+           #:resource-fork-write #:resource-fork-read
+           ;; MacBinary II (lib/macbinary.lisp; its CRC is cram's)
+           #:macbinary-write #:macbinary-read))
